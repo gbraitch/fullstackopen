@@ -1,0 +1,15 @@
+note over browser
+User clicks save button
+end note
+
+note over browser
+Event handler creates new note, adds
+it to notes list, rerenders notes list,
+and sends note to server
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note over server
+Server receives new note as JSON data
+end note
+server-->browser: HTTP status code 201 (Request has been fulfilled)
