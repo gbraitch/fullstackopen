@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import personsService from '../services/persons'
 
 const PersonForm = ({persons, setPersons}) => {
   const [ newName, setNewName ] = useState('')
@@ -12,13 +13,27 @@ const PersonForm = ({persons, setPersons}) => {
     }
 
     if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook.`)
+      const res = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+
+      if (res) {
+        const id = persons.find(person => person.name === newName).id
+        personsService
+          .update(id,person)
+          .then(response  => {
+            setPersons(persons.map(person => person.id !== id ? person : response.data ))
+          })
+      }
+
       return
     }
 
-    setPersons(persons.concat(person))
-    setNewName('')
-    setNewNumber('')
+    personsService
+      .create(person)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleNameChange = (event => setNewName(event.target.value))
