@@ -2,7 +2,7 @@ import React from 'react'
 import Person from './Person'
 import personsService from '../services/persons'
 
-const Persons = ({persons, setPersons, filter}) => {
+const Persons = ({persons, setPersons, filter, setMessage}) => {
   const personsFiltered = persons.filter(person => person.name.toUpperCase().startsWith(filter.toUpperCase()))
 
   const deletePerson = (name,id) => {
@@ -11,6 +11,10 @@ const Persons = ({persons, setPersons, filter}) => {
         .del(id)
         .then(response => {
           setPersons(persons.filter(p => p.id !== id))
+          setMessage(`Deleted ${name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         })
     }
   }

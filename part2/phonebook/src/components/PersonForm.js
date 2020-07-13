@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import personsService from '../services/persons'
 
-const PersonForm = ({persons, setPersons}) => {
+const PersonForm = ({persons, setPersons, setMessage, setErrorMessage}) => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber] = useState('')
 
@@ -21,9 +21,23 @@ const PersonForm = ({persons, setPersons}) => {
           .update(id,person)
           .then(response  => {
             setPersons(persons.map(person => person.id !== id ? person : response.data ))
+
+            setMessage(`Updated ${newName}'s number`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+          })
+          .catch(error => {
+            console.log(error)
+            setErrorMessage(
+              `Information of ${newName} has already been removed from server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPersons(persons.filter(p => p.name !== newName))
           })
       }
-
       return
     }
 
@@ -33,6 +47,10 @@ const PersonForm = ({persons, setPersons}) => {
         setPersons(persons.concat(response.data))
         setNewName('')
         setNewNumber('')
+        setMessage(`Added ${person.name}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
   }
 
